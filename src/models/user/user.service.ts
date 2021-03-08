@@ -11,6 +11,10 @@ import { RegisterResponseDto } from './dto/registerResponse.dto';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocment>) {}
 
+  async findOne(email: string): Promise<User> {
+    return this.userModel.findOne({ email });
+  }
+
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     try {
       const { email } = registerDto;
