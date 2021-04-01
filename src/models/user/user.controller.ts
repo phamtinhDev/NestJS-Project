@@ -6,39 +6,27 @@ import {
   HttpStatus,
   Body,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
+import { LoginRequestDto } from './dto/loginRequest.dto';
+import { RegisterRequestDto } from './dto/registerRequest.dto';
 import { UserService } from './user.service';
+import { AuthService } from '../../authentication/auth.service';
+import { LocalAuthGuard } from '../../authentication/guards/local.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly _userService: UserService) {}
 
   @Post('register')
-  async register(@Body() body: RegisterDto, @Res() res: Response) {
-    const newUser = await this._userService.register(body);
+  async register(@Body() body: RegisterRequestDto, @Res() res: Response) {}
 
-    return res.json(newUser);
-  }
-
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() body: LoginDto, @Res() res: Response) {
-    const loginResult = await this._userService.login(body);
-
-    return res.json(loginResult);
-  }
+  async login(@Body() body: LoginRequestDto, @Res() res: Response) {}
 
   @Get('profile')
-  profile(@Query() query, @Res() res: Response) {
-    const { id } = query;
-
-    return res.status(HttpStatus.OK).json({
-      userId: id,
-      userName: 'phamtinh142',
-      age: 23,
-    });
-  }
+  profile(@Query() query, @Res() res: Response) {}
 }
